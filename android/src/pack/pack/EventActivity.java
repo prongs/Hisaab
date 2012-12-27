@@ -54,8 +54,8 @@ public class EventActivity extends ListActivity implements OnClickListener {
 
 		public int getCount() {
 			int count = peopleArray.length + unsavedPeopleList.size();
-			Toast.makeText(EventActivity.this, "getcount returning " + count,
-					Toast.LENGTH_SHORT).show();
+			// Toast.makeText(EventActivity.this, "getcount returning " + count,
+			// Toast.LENGTH_SHORT).show();
 			return count;
 		}
 
@@ -81,12 +81,16 @@ public class EventActivity extends ListActivity implements OnClickListener {
 				holder.name.setOnClickListener(this);
 				holder.share = (EditText) convertView
 						.findViewById(R.id.edittext_share);
-				if (p.share > 0||position<peopleArray.length)
+				if(p.share==null)
+					holder.share.setText("");
+				else if (p.share > 0 || position < peopleArray.length)
 					holder.share.setText(p.share + "");
 				holder.share.setTag(p.lookupUri);
 				holder.spent = (EditText) convertView
 						.findViewById(R.id.edittext_spent);
-				if (p.spent > 0||position<peopleArray.length)
+				if(p.spent==null)
+					holder.spent.setText("");
+				else if (p.spent > 0 || position < peopleArray.length)
 					holder.spent.setText(p.spent + "");
 				// holder.spent.setTag(new int[] { position, 1 });
 				convertView.setTag(holder);
@@ -104,9 +108,9 @@ public class EventActivity extends ListActivity implements OnClickListener {
 		}
 
 		PersonInfo getPersonInfo(int position) {
-			Toast.makeText(EventActivity.this,
-					"getPersonInfo for position=" + position,
-					Toast.LENGTH_SHORT).show();
+			// Toast.makeText(EventActivity.this,
+			// "getPersonInfo for position=" + position,
+			// Toast.LENGTH_SHORT).show();
 			if (position < peopleArray.length) {
 				if (peopleArray[position] == null) {
 					peopleArray[position] = new PersonInfo(
@@ -121,8 +125,12 @@ public class EventActivity extends ListActivity implements OnClickListener {
 											Contacts.DISPLAY_NAME }, null,
 									null, null);
 					c.moveToFirst();
-					peopleArray[position].share = cursor.getInt(2);
-					peopleArray[position].spent = cursor.getInt(3);
+					peopleArray[position].share = null;
+					peopleArray[position].spent = null;
+					if (cursor.getInt(4) == event_id) {
+						peopleArray[position].share = cursor.getInt(2);
+						peopleArray[position].spent = cursor.getInt(3);
+					}
 					peopleArray[position]._id = cursor.getInt(0);
 					peopleArray[position].name = c.getString(1);
 				}
@@ -180,8 +188,9 @@ public class EventActivity extends ListActivity implements OnClickListener {
 		Intent i = getIntent();
 		trip_id = i.getIntExtra("trip_id", -1);
 		event_id = i.getIntExtra("event_id", -1);
-		Toast.makeText(this, "event_id: " + event_id + ", trip_id: " + trip_id,
-				Toast.LENGTH_LONG).show();
+		// Toast.makeText(this, "event_id: " + event_id + ", trip_id: " +
+		// trip_id,
+		// Toast.LENGTH_LONG).show();
 		if (i.getIntExtra("requestCode", -1) == OneTripActivity.EDIT_EVENT) {
 			EditText et1 = (EditText) findViewById(R.id.name_event);
 			EditText et2 = (EditText) findViewById(R.id.description_event);
@@ -201,32 +210,47 @@ public class EventActivity extends ListActivity implements OnClickListener {
 				int total_share = 0, total_spent = 0;
 				int no_children = lv.getChildCount();
 				shares = new int[no_children];
+				int num_participants = 0;
 				for (int i = 0; i < no_children; i++) {
 					LinearLayout ll = (LinearLayout) lv.getChildAt(i);
 					EditText et_spent = (EditText) ll.getChildAt(2);
 					String s = et_spent.getText().toString().trim();
-					int j=0;
-					if (!s.isEmpty())
-						j=Integer.parseInt(s);
+					int j = 0;
+					if (!s.isEmpty()) {
+						j = Integer.parseInt(s);
+						num_participants++;
+					}
 					total_spent += j;
 				}
-				int eq_share = total_spent / no_children;
-				int remaining = total_spent % no_children;
+				int eq_share = total_spent / num_participants;
+				int remaining = total_spent % num_participants;
 				for (int i = 0; i < no_children; i++) {
-					shares[i] = eq_share;
+					LinearLayout ll = (LinearLayout) lv.getChildAt(i);
+					EditText et_spent = (EditText) ll.getChildAt(2);
+					String s = et_spent.getText().toString().trim();
+					int j = 0;
+					if (!s.isEmpty()) {
+						shares[i] = eq_share;
+					}
 				}
 				Random r = new Random(System.currentTimeMillis());
 				while (remaining > 0) {
-					int pos=r.nextInt(no_children);
-					shares[pos]+=1;
-					remaining--;
+					int pos = r.nextInt(no_children);
+					if (shares[pos] > 0) {
+						shares[pos] += 1;
+						remaining--;
+					}
 				}
 				for (int i = 0; i < no_children; i++) {
 					LinearLayout ll = (LinearLayout) lv.getChildAt(i);
-					EditText et_share = (EditText) ll.getChildAt(1);
-					et_share.setText(shares[i]+"");
+					EditText et_spent = (EditText) ll.getChildAt(2);
+					String s = et_spent.getText().toString().trim();
+					if (!s.isEmpty()) {
+						EditText et_share = (EditText) ll.getChildAt(1);
+						et_share.setText(shares[i] + "");
+					}
 				}
-				
+
 			}
 		});
 		Button button_verify_sum = (Button) findViewById(R.id.button_verify_sum);
@@ -242,13 +266,13 @@ public class EventActivity extends ListActivity implements OnClickListener {
 		b.setOnClickListener(this);
 		DBHelper dbHelper = new DBHelper(this);
 		unsavedPeopleList = new ArrayList<PersonInfo>();
-		Cursor c = dbHelper.getMoneyList(event_id);
+		Cursor c = dbHelper.getMoneyList(trip_id, event_id);
 		peopleArray = new PersonInfo[c.getCount()];
-		Toast.makeText(
-				EventActivity.this,
-				"cursor count=" + c.getCount() + ", list length = "
-						+ peopleArray.length, Toast.LENGTH_SHORT).show();
-		peopleListAdapter=new PeopleListAdapter(this, c, peopleArray,
+		// Toast.makeText(
+		// EventActivity.this,
+		// "cursor count=" + c.getCount() + ", list length = "
+		// + peopleArray.length, Toast.LENGTH_SHORT).show();
+		peopleListAdapter = new PeopleListAdapter(this, c, peopleArray,
 				unsavedPeopleList);
 		setListAdapter(peopleListAdapter);
 		Button button_add_person = (Button) findViewById(R.id.button_add_person);
@@ -271,8 +295,10 @@ public class EventActivity extends ListActivity implements OnClickListener {
 			LinearLayout ll = (LinearLayout) lv.getChildAt(i);
 			EditText tv_share = (EditText) ll.getChildAt(1);
 			EditText tv_spent = (EditText) ll.getChildAt(2);
-			sum_share += Integer.parseInt(tv_share.getText().toString());
-			sum_spent += Integer.parseInt(tv_spent.getText().toString());
+			sum_share += (tv_share.getText().toString().trim().isEmpty()) ? 0
+					: Integer.parseInt(tv_share.getText().toString());
+			sum_spent += (tv_spent.getText().toString().trim().isEmpty()) ? 0
+					: Integer.parseInt(tv_spent.getText().toString());
 		}
 		total_share = sum_share;
 		total_spent = sum_spent;
@@ -289,27 +315,32 @@ public class EventActivity extends ListActivity implements OnClickListener {
 		DBHelper dbHelper = new DBHelper(this);
 		TextView t1 = (TextView) findViewById(R.id.name_event);
 		TextView t2 = (TextView) findViewById(R.id.description_event);
-		Toast.makeText(this, "Event_id before: " + event_id, Toast.LENGTH_LONG)
-				.show();
+		// Toast.makeText(this, "Event_id before: " + event_id,
+		// Toast.LENGTH_LONG)
+		// .show();
 		event_id = (int) dbHelper.insertOrUpdateEvent(trip_id, event_id, t1
 				.getText().toString(), t2.getText().toString(), total_share,
 				total_spent);
-		Toast.makeText(this, "Starting saving money list, eventid = "+event_id, Toast.LENGTH_SHORT)
-				.show();
+		// Toast.makeText(this,
+		// "Starting saving money list, eventid = "+event_id,
+		// Toast.LENGTH_SHORT)
+		// .show();
 		for (int i = 0; i < peopleArray.length; i++) {
-			Toast.makeText(this, "i=" + i, Toast.LENGTH_SHORT).show();
+			// Toast.makeText(this, "i=" + i, Toast.LENGTH_SHORT).show();
 			PersonInfo p = peopleArray[i];
 			if (p.isModified((LinearLayout) getListView().getChildAt(i))) {
-				Toast.makeText(this, "modified true", Toast.LENGTH_LONG).show();
+				// Toast.makeText(this, "modified true",
+				// Toast.LENGTH_LONG).show();
 				dbHelper.updatePersonInfo(p, event_id);
 			}
 		}
-		Toast.makeText(this, "unsaved starging", Toast.LENGTH_SHORT).show();
-		for (int i=0;i<unsavedPeopleList.size();i++) {
-			Toast.makeText(this, "one of the unsaved", Toast.LENGTH_SHORT)
-					.show();
+		// Toast.makeText(this, "unsaved starging", Toast.LENGTH_SHORT).show();
+		for (int i = 0; i < unsavedPeopleList.size(); i++) {
+			// Toast.makeText(this, "one of the unsaved", Toast.LENGTH_SHORT)
+			// .show();
 			PersonInfo p = unsavedPeopleList.get(i);
-			p.ll=(LinearLayout)getListView().getChildAt(peopleArray.length+i);
+			p.ll = (LinearLayout) getListView().getChildAt(
+					peopleArray.length + i);
 			dbHelper.insertPersonInfo(p, event_id, trip_id);
 		}
 		dbHelper.close();
@@ -331,7 +362,7 @@ public class EventActivity extends ListActivity implements OnClickListener {
 		if (requestCode == NEW_CONTACT && resultCode == Activity.RESULT_OK) {
 			PersonInfo p = new PersonInfo();
 			Uri u = data.getData();
-			Toast.makeText(this, u.toString(), Toast.LENGTH_LONG).show();
+			// Toast.makeText(this, u.toString(), Toast.LENGTH_LONG).show();
 			Log.d("NewEventActivity", u.toString());
 			ContentResolver resolver = getContentResolver();
 			Cursor cursor = resolver.query(u, new String[] { Contacts._ID,
@@ -349,8 +380,9 @@ public class EventActivity extends ListActivity implements OnClickListener {
 			int position;
 			// position = data.getIntExtra("position", -1);
 			position = clickedPos;
-			Toast.makeText(this, "hi,position=:" + position, Toast.LENGTH_SHORT)
-					.show();
+			// Toast.makeText(this, "hi,position=:" + position,
+			// Toast.LENGTH_SHORT)
+			// .show();
 			if (position != -1) {
 				LinearLayout ll = (LinearLayout) getListView().getChildAt(
 						position);

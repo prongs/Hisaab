@@ -10,8 +10,8 @@ public class PersonInfo {
 	Uri lookupUri;
 	int _id;
 	String name="";
-	int share;
-	int spent;
+	Integer share;
+	Integer spent;
 	LinearLayout ll;
 	public PersonInfo() {
 		// TODO Auto-generated constructor stub
@@ -25,14 +25,9 @@ public class PersonInfo {
 		TextView tv_name = (TextView)ll.getChildAt(0);
 		EditText et_share = (EditText)ll.getChildAt(1);
 		EditText et_spent = (EditText)ll.getChildAt(2);
-		Log.d("PersonInfo", "checking modified");
-		Log.d("PersonInfo", "name= "+name);
-		Log.d("PersonInfo", "tv_name text: "+tv_name.getText());
-		Log.d("PersonInfo", "share = "+share);
-		Log.d("PersonInfo", "et_share text: "+Integer.parseInt(et_share.getText().toString()));
-		Log.d("PersonInfo", "spent = "+spent);
-		Log.d("PersonInfo", "et_spent text: "+Integer.parseInt(et_spent.getText().toString()));
-		return !(name==tv_name.getText().toString()&&share==Integer.parseInt(et_share.getText().toString())&&spent==Integer.parseInt(et_spent.getText().toString()));
+		if (et_share.getText().toString().isEmpty()||et_spent.getText().toString().isEmpty())
+			return false;
+		return !(name==tv_name.getText().toString()&&share==((et_share.getText().toString().trim().isEmpty())?0:Integer.parseInt(et_share.getText().toString()))&&spent==((et_spent.getText().toString().isEmpty())?0:Integer.parseInt(et_spent.getText().toString())));
 	}
 	boolean isModified(LinearLayout ll)
 	{
@@ -42,11 +37,15 @@ public class PersonInfo {
 	int getNewShare()
 	{
 		EditText share = (EditText)ll.getChildAt(1);
+		if (share.getText().toString().trim().isEmpty())
+			return 0;
 		return Integer.parseInt(share.getText().toString());
 	}
 	int getNewSpent()
 	{
 		EditText spent = (EditText)ll.getChildAt(2);
+		if (spent.getText().toString().trim().isEmpty())
+			return 0;
 		return Integer.parseInt(spent.getText().toString());
 	}
 	Uri getNewLookupUri()

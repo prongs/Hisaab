@@ -128,12 +128,12 @@ public class DBHelper extends SQLiteOpenHelper {
 		return cur;
 	}
 
-	Cursor getMoneyList(int id) {
+	Cursor getMoneyList(int trip_id, int event_id) {
 		SQLiteDatabase db = getReadableDatabase();
 //		Toast.makeText(context, "inside getmoney list, id= " + id,
 //				Toast.LENGTH_SHORT).show();
 		Cursor c = db.rawQuery("SELECT * FROM " + TABLE_MONEY
-				+ " WHERE event_id=? ORDER BY _id ASC", new String[]{id+""});
+				+ " WHERE trip_id=? ORDER BY _id ASC", new String[]{trip_id+""});
 //		db.close();
 //		Toast.makeText(
 //				context,
@@ -160,7 +160,8 @@ public class DBHelper extends SQLiteOpenHelper {
 		cv.put("people_id", p.getNewLookupUri().toString());
 		cv.put("share", p.getNewShare());
 		cv.put("spent", p.getNewSpent());
-		db.insert(TABLE_MONEY, "", cv);
+		if(p.getNewShare()>0 && p.getNewSpent()>0)
+			db.insert(TABLE_MONEY, "", cv);
 	}
 	Cursor getTripSummary(int trip_id)
 	{
