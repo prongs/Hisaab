@@ -12,7 +12,7 @@ import android.widget.Toast;
 
 public class DBHelper extends SQLiteOpenHelper {
 	public Context context;
-	public static final int VERSION = 3;
+	public static final int VERSION = 1;
 	public static final String DB_NAME = "hisaabDB";
 	public static final String TABLE_SUMMARY = "summary";
 	public static final String TABLE_EVENT = "event";

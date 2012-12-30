@@ -1,0 +1,31 @@
+<html lang="en">
+    <head>
+        <title>Hisaab</title>
+        <link rel="stylesheet" href="static/dojo/1.7.3/dijit/themes/claro/claro.css">
+        <link rel="stylesheet" href="static/main.css">
+        <script>
+            var dojoConfig=(function(){
+                return {
+                    async:true,
+                    isDebug:true,
+                    parseOnLoad:true,
+                    packages:[{
+                        name:"Hisaab",
+                        location: location.origin+"/static/dojo/Hisaab"
+                    }],
+                };
+
+            })();
+        </script>
+        <script src="static/dojo/1.7.3/dojo/dojo.js"></script>
+        <script>
+            require(["Hisaab/AppController", "dojo/domReady!"],function(AppController){
+                (new AppController()).init();
+            });
+        </script>
+    </head>
+    <body class="claro">
+        <div id="mainViewWidgetDiv">
+        </div>
+    </body>
+</html>
