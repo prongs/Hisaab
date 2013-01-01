@@ -1,0 +1,21 @@
+[
+     {
+        "id" : "hisaab",
+        "caption": "Hisaab",
+        "children":
+        [
+            {
+                "caption" : "New Trip",
+                "command" : "hisaab",
+                "args" : {
+                    "new" : "true"
+                }
+            },
+            {
+                "caption" : "Browse/Open Trips",
+                "command" : "hisaab"
+            }
+
+         ]
+    }
+]

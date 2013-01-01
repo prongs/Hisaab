@@ -8,13 +8,13 @@
                 return {
                     async:true,
                     isDebug:true,
-                    parseOnLoad:true,
+                    // parseOnLoad:true,
+                    uncompressed: true,
                     packages:[{
                         name:"Hisaab",
                         location: location.origin+"/static/dojo/Hisaab"
                     }],
                 };
-
             })();
         </script>
         <script src="static/dojo/1.7.3/dojo/dojo.js"></script>
@@ -29,3 +29,4 @@
         </div>
     </body>
 </html>
+

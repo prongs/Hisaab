@@ -4,10 +4,15 @@ import appdirs
 from utils import *
 
 
+def py2sql(v):
+    # works for ints, strs
+    return repr(str(v))
+
+
 class DBHelper(object):
     """Database helper class"""
-    TABLE_SUMMARY = "summary"
-    TABLE_EVENT = "event"
+    TABLE_SUMMARY = "trips"
+    TABLE_EVENT = "events"
     TABLE_PEOPLE = "people"
     TABLE_EVENT_PEOPLE = "event_people"
     TABLE_MONEY = "money"
@@ -41,3 +46,14 @@ class DBHelper(object):
     def drop_all_tables(self):
         for x in [self.TABLE_SUMMARY, self.TABLE_EVENT, self.TABLE_MONEY, self.TABLE_PEOPLE, self.TABLE_EVENT_PEOPLE]:
             self.drop_table(x)
+
+    def select(self, table_name, columns="*", **kwargs):
+        query = "select %s from  %s " % (columns, table_name)
+        if len(kwargs) > 0:
+            query += "where " + "and ".join("%s = %s " % (k, py2sql(kwargs[k])) for k in kwargs)
+        print query
+        result = self.connection.query(query[:-1])
+        return result
+
+    def select_one_row(self, table_name, **kwargs):
+        return self.select(table_name, **kwargs)[0]

@@ -6,6 +6,8 @@ import tornado.web
 from tornado import httpclient
 from utils import *
 import dbhelper
+import json
+import solver
 root = os.path.dirname(__file__)
 template_root = os.path.join(root, "templates")
 blacklist_templates = ('layouts',)
@@ -46,10 +48,18 @@ class MainHandler(DefaultHandler):
     def get(self, filename):
         self.write(render_template(filename))
 
+
+class RESTHandler(DefaultHandler):
+    def get(self, table, _id):
+        result = db.select(table) if not _id else db.select(table, _id=_id)[0]
+        self.write(json.dumps(result))
+
 application = tornado.web.Application([
+    (r'^/REST/(.*?)/(.*)$', RESTHandler),
     (r'^/(.*)$', MainHandler),
     ], debug=True, static_path=os.path.join(root, 'static'))
 
 if __name__ == '__main__':
     application.listen(20000)
     tornado.ioloop.IOLoop.instance().start()
+
