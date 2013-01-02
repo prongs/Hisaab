@@ -5,6 +5,23 @@ from trip import *
 from utils import *
 
 
+sampleLine = """
+################################################
+#       Sample:                                #
+#       TripName:                              #
+#           event1:                            #
+#               person1:                       #
+#                   share spent                #
+#               person2:                       #
+#                   share spent                #
+#               person1 -> person2:            #
+#                   amount_transferred         #
+#           event2:                            #
+#               ...                            #
+################################################
+"""
+
+
 class HisaabCommand(sublime_plugin.ApplicationCommand, sublime_plugin.EventListener):
     def init(self):
         path = os.path.join(sublime.packages_path(), "User", "Hisaab")
@@ -46,8 +63,7 @@ class HisaabCommand(sublime_plugin.ApplicationCommand, sublime_plugin.EventListe
             if self.trip_file_view.is_loading():
                 sublime.set_timeout(f, 100)
             e = self.trip_file_view.begin_edit()
-            sampleLine = "###############################\n#Sample:                      #\n#TripName:                    #\n#  event1:                    #\n#      person1:               #\n#          share spent        #\n#      person2:               #\n#          share spent        #\n#  event2:                    #\n#      ...                    #\n###############################\n"
-            self.trip_file_view.insert(e, 0, sampleLine + trip_name + ":\n\t")
+            self.trip_file_view.insert(e, 0, sampleLine[1:] + trip_name + ":\n\t")
             self.trip_file_view.end_edit(e)
         if newfile:
             sublime.set_timeout(f, 100)

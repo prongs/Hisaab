@@ -1,5 +1,8 @@
 import yaml
 import solver
+import re
+
+inteval = lambda x: x if type(x) == int else int(eval(x))
 
 
 class Person(object):
@@ -31,7 +34,25 @@ class Event(object):
         self.name = name
         self.people = people
         if type(self.people) == dict:
-            self.people = list(Person(key, *map(int, self.people[key].split())) for key in self.people)
+            ppl = {}
+            for key in people:
+                m = re.search(r'-+>+', key)
+                if m:
+                    p1 = key[:m.start()].strip()
+                    p2 = key[m.end():].strip()
+                    ppl.setdefault(p1, Person(p1, 0, 0))
+                    ppl.setdefault(p2, Person(p2, 0, 0))
+                    amt = inteval(people[key])
+                    ppl[p1].spent += amt
+                    ppl[p2].share += amt
+                else:
+                    p = key.strip()
+                    ppl.setdefault(p, Person(p, 0, 0))
+                    share, spent = map(inteval, people[p].split())
+                    ppl[p].share += share
+                    ppl[p].spent += spent
+
+            self.people = ppl.values()
 
     def __repr__(self):
         return self.name + ": " + "{" + ", ".join(str(p) for p in self.people) + "}"

@@ -12,7 +12,8 @@ class Solution(object):
         self.tList = []
 
     def put(self, fr, to, amount):
-        self.tList.append((fr, to, amount))
+        if amount != 0:
+            self.tList.append((fr, to, amount))
 
     def len(self):
         return len(self.tList)
@@ -46,7 +47,7 @@ class Solver(object):
 class SimpleSolver(Solver):
     """docstring for SimpleSolver"""
     def solve(self):
-        people = sorted(filter(lambda p: p.net != 0, self.people), cmp=self.cmpNet)
+        people = sorted(self.people, cmp=self.cmpNet)
         self.solution = Solution()
         while(len(people) > 0):
             if people[0].net > -people[-1].net:
@@ -66,7 +67,7 @@ class SimpleSolver(Solver):
 class AnotherSimpleSolver(Solver):
     """docstring for AnotherSimpleSolver"""
     def solve(self):
-        people = sorted(filter(lambda p: p.net != 0, self.people), cmp=(lambda x, y: y.net - x.net))
+        people = sorted(self.people, cmp=self.cmpNet)
         self.solution = Solution()
         while(len(people) > 0):
             if people[0].net > -people[-1].net:
