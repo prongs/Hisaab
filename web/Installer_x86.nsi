@@ -22,7 +22,7 @@ SetCompressor lzma
 ; Instfiles page
 !insertmacro MUI_PAGE_INSTFILES
 ; Finish page
-!define MUI_FINISHPAGE_RUN "$PROGRAMFILES64\Sublime Text 2\sublime_text.exe"
+!define MUI_FINISHPAGE_RUN "$PROGRAMFILES\Sublime Text 2\sublime_text.exe"
 !insertmacro MUI_PAGE_FINISH
 
 
@@ -35,7 +35,7 @@ SetCompressor lzma
 ; MUI end ------
 
 Name "${PRODUCT_NAME} ${PRODUCT_VERSION}"
-OutFile "Hisaab.exe"
+OutFile "Hisaab_x86.exe"
 InstallDir "$PROGRAMFILES\Hisaab"
 ShowInstDetails show
 ShowUnInstDetails show
@@ -44,7 +44,7 @@ ShowUnInstDetails show
 
 Section "SublimeText Plugin" SEC01
 retry:
-  IfFileExists "$PROGRAMFILES64\Sublime Text 2\sublime_text.exe" +2 0
+  IfFileExists "$PROGRAMFILES\Sublime Text 2\sublime_text.exe" +2 0
   MessageBox MB_RETRYCANCEL "Sublime Text 2 was not found on the system. Install Sublime Text 2 and press Retry. Download link: http://www.sublimetext.com/2" IDRETRY retry IDCANCEL cancel
   SetOutPath "$APPDATA\Sublime Text 2\Packages\Hisaab"
   SetOverwrite ifnewer
