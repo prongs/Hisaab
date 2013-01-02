@@ -1,0 +1,40 @@
+################################################
+#       Sample:                                #
+#       TripName:                              #
+#       	event1:                            #
+#       		person1:                       #
+#       			share spent                #
+#       		person2:                       #
+#       			share spent                #
+#       		person1 -> person2:            #
+#       			amount_transferred         #
+#       	event2:                            #
+#       		...                            #
+################################################
+
+#Experiment with these
+Goa:
+	event1:
+		p1: 100 10+10
+		p2:	10+20 100+10
+	event2:
+		p3: 10 100
+		p4: 100 10
+		p3->p4 : 90+100
+
+##############################################
+#                                            #
+#                                            #
+#    Summary:                                #
+#        p2 will receive 80                  #
+#        p3 will receive 280                 #
+#        p1 will pay 80                      #
+#        p4 will pay 280                     #
+#                                            #
+#                                            #
+#    Solution:                               #
+#        p4 pays p3 280                      #
+#        p1 pays p2 80                       #
+#                                            #
+#                                            #
+##############################################
