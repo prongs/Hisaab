@@ -39,6 +39,8 @@ class Solver(object):
         totalSpent = sum(p.spent for p in self.people)
         if totalSpent != totalShare:
             raise UnbalancedException("totalSpent=%d while totalShare=%d" % (totalSpent, totalShare))
+        for p in self.people:
+            p.net = p.share - p.spent
 
     def summary(self):
         return "\n".join(p.repr_net() for p in self.people)
@@ -52,7 +54,7 @@ class SimpleSolver(Solver):
         while(len(people) > 0):
             if people[0].net > -people[-1].net:
                 people[0].net += people[-1].net
-                self.solution.put(people[0].name, people[-1].name, people[-1].net)
+                self.solution.put(people[0].name, people[-1].name, -people[-1].net)
                 people = people[:-1]
             elif people[0].net < -people[-1].net:
                 people[-1].net += people[0].net
@@ -72,7 +74,7 @@ class AnotherSimpleSolver(Solver):
         while(len(people) > 0):
             if people[0].net > -people[-1].net:
                 people[0].net += people[-1].net
-                self.solution.put(people[0].name, people[-1].name, people[-1].net)
+                self.solution.put(people[0].name, people[-1].name, -people[-1].net)
                 people = people[:-1]
             elif people[0].net < -people[-1].net:
                 people[-1].net += people[0].net

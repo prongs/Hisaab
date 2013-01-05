@@ -55,6 +55,7 @@ class HisaabCommand(sublime_plugin.ApplicationCommand, sublime_plugin.EventListe
 
     def open_trip_file(self, trip_name):
         file_path = os.path.join(self.trip_files_location, trip_name + ".yaml")
+        newfile = False
         if not os.path.exists(file_path):
             newfile = True
         self.trip_file_view = sublime.active_window().open_file(file_path)
