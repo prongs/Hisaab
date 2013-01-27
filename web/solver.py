@@ -43,7 +43,7 @@ class Solver(object):
             p.net = p.share - p.spent
 
     def summary(self):
-        return "\n".join(p.repr_net() for p in self.people)
+        return "Total Share = %d\nTotal Spent = %d\n\n" % (sum(p.share for p in self.people), sum(p.spent for p in self.people)) + "\n".join(p.repr_net() for p in self.people)
 
 
 class SimpleSolver(Solver):
