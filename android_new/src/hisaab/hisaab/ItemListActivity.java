@@ -1,23 +1,23 @@
 package hisaab.hisaab;
 
+import java.util.Calendar;
+
 import android.app.AlertDialog;
+import android.app.ExpandableListActivity;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.database.DataSetObserver;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.view.Gravity;
-import android.view.View;
-import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.ListAdapter;
+import android.widget.ExpandableListView;
 import android.widget.ListView;
 import android.widget.Toast;
 
 public class ItemListActivity extends FragmentActivity implements
 		ItemListFragment.Callbacks {
-
+	
 	private boolean mTwoPane;
 
 	@Override
@@ -51,82 +51,12 @@ public class ItemListActivity extends FragmentActivity implements
 	 wmlp.y = 00;   //y position
 	 alert.show();
 	 
-	 ListView lv = (ListView)findViewById(R.id.listView1);
-//	 lv.setAdapter(new ListAdapter() {
-//		
-//		@Override
-//		public void unregisterDataSetObserver(DataSetObserver observer) {
-//			// TODO Auto-generated method stub
-//			
-//		}
-//		
-//		@Override
-//		public void registerDataSetObserver(DataSetObserver observer) {
-//			// TODO Auto-generated method stub
-//			
-//		}
-//		
-//		@Override
-//		public boolean isEmpty() {
-//			// TODO Auto-generated method stub
-//			return false;
-//		}
-//		
-//		@Override
-//		public boolean hasStableIds() {
-//			// TODO Auto-generated method stub
-//			return false;
-//		}
-//		
-//		@Override
-//		public int getViewTypeCount() {
-//			// TODO Auto-generated method stub
-//			return 0;
-//		}
-//		
-//		@Override
-//		public View getView(int position, View convertView, ViewGroup parent) {
-//			// TODO Auto-generated method stub
-//			return null;
-//		}
-//		
-//		@Override
-//		public int getItemViewType(int position) {
-//			// TODO Auto-generated method stub
-//			return 0;
-//		}
-//		
-//		@Override
-//		public long getItemId(int position) {
-//			// TODO Auto-generated method stub
-//			return 0;
-//		}
-//		
-//		@Override
-//		public Object getItem(int arg0) {
-//			// TODO Auto-generated method stub
-//			return null;
-//		}
-//		
-//		@Override
-//		public int getCount() {
-//			// TODO Auto-generated method stub
-//			return 0;
-//		}
-//		
-//		@Override
-//		public boolean isEnabled(int position) {
-//			// TODO Auto-generated method stub
-//			return false;
-//		}
-//		
-//		@Override
-//		public boolean areAllItemsEnabled() {
-//			// TODO Auto-generated method stub
-//			return false;
-//		}
-//	});
-			 
+	 
+	 
+	 
+	 	 
+	 ExpandableListView elv = (ExpandableListView)findViewById(R.id.listView1);
+	 elv.setAdapter(new EventListAdapter());
 	 
 	}
 

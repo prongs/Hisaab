@@ -26,24 +26,24 @@
             android:background="@null"
             android:src="@drawable/options_btn_img" />
     </LinearLayout>
-
+
     <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentRight="true"
-        android:layout_below="@+id/linearLayout1"        
+        android:layout_below="@+id/linearLayout1"
         android:orientation="vertical"
         android:background="@drawable/gradient_background" 
-         >
-
-        <ListView
+        >
+
+        <ExpandableListView
             android:id="@+id/listView1"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" >
+            android:layout_height="match_parent" >
 
-        </ListView>
+        </ExpandableListView>
     </LinearLayout>
 
 </RelativeLayout>
