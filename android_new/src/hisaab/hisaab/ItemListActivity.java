@@ -52,80 +52,80 @@ public class ItemListActivity extends FragmentActivity implements
 	 alert.show();
 	 
 	 ListView lv = (ListView)findViewById(R.id.listView1);
-	 lv.setAdapter(new ListAdapter() {
-		
-		@Override
-		public void unregisterDataSetObserver(DataSetObserver observer) {
-			// TODO Auto-generated method stub
-			
-		}
-		
-		@Override
-		public void registerDataSetObserver(DataSetObserver observer) {
-			// TODO Auto-generated method stub
-			
-		}
-		
-		@Override
-		public boolean isEmpty() {
-			// TODO Auto-generated method stub
-			return false;
-		}
-		
-		@Override
-		public boolean hasStableIds() {
-			// TODO Auto-generated method stub
-			return false;
-		}
-		
-		@Override
-		public int getViewTypeCount() {
-			// TODO Auto-generated method stub
-			return 0;
-		}
-		
-		@Override
-		public View getView(int position, View convertView, ViewGroup parent) {
-			// TODO Auto-generated method stub
-			return null;
-		}
-		
-		@Override
-		public int getItemViewType(int position) {
-			// TODO Auto-generated method stub
-			return 0;
-		}
-		
-		@Override
-		public long getItemId(int position) {
-			// TODO Auto-generated method stub
-			return 0;
-		}
-		
-		@Override
-		public Object getItem(int arg0) {
-			// TODO Auto-generated method stub
-			return null;
-		}
-		
-		@Override
-		public int getCount() {
-			// TODO Auto-generated method stub
-			return 0;
-		}
-		
-		@Override
-		public boolean isEnabled(int position) {
-			// TODO Auto-generated method stub
-			return false;
-		}
-		
-		@Override
-		public boolean areAllItemsEnabled() {
-			// TODO Auto-generated method stub
-			return false;
-		}
-	});
+//	 lv.setAdapter(new ListAdapter() {
+//		
+//		@Override
+//		public void unregisterDataSetObserver(DataSetObserver observer) {
+//			// TODO Auto-generated method stub
+//			
+//		}
+//		
+//		@Override
+//		public void registerDataSetObserver(DataSetObserver observer) {
+//			// TODO Auto-generated method stub
+//			
+//		}
+//		
+//		@Override
+//		public boolean isEmpty() {
+//			// TODO Auto-generated method stub
+//			return false;
+//		}
+//		
+//		@Override
+//		public boolean hasStableIds() {
+//			// TODO Auto-generated method stub
+//			return false;
+//		}
+//		
+//		@Override
+//		public int getViewTypeCount() {
+//			// TODO Auto-generated method stub
+//			return 0;
+//		}
+//		
+//		@Override
+//		public View getView(int position, View convertView, ViewGroup parent) {
+//			// TODO Auto-generated method stub
+//			return null;
+//		}
+//		
+//		@Override
+//		public int getItemViewType(int position) {
+//			// TODO Auto-generated method stub
+//			return 0;
+//		}
+//		
+//		@Override
+//		public long getItemId(int position) {
+//			// TODO Auto-generated method stub
+//			return 0;
+//		}
+//		
+//		@Override
+//		public Object getItem(int arg0) {
+//			// TODO Auto-generated method stub
+//			return null;
+//		}
+//		
+//		@Override
+//		public int getCount() {
+//			// TODO Auto-generated method stub
+//			return 0;
+//		}
+//		
+//		@Override
+//		public boolean isEnabled(int position) {
+//			// TODO Auto-generated method stub
+//			return false;
+//		}
+//		
+//		@Override
+//		public boolean areAllItemsEnabled() {
+//			// TODO Auto-generated method stub
+//			return false;
+//		}
+//	});
 			 
 	 
 	}
