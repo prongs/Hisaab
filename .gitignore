@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 
 # built application files
 #*.apk
@@ -29,3 +30,13 @@ proguard/
 #python
 *.pyc
 *.pyo
+=======
+bin
+build
+include
+lib
+*.pyc
+.DS_Store
+.svn
+
+>>>>>>> Initial Commit
