@@ -27,8 +27,7 @@ class Application(tornado.web.Application):
         mappings = handlers.mappings + [
             (r"/([^/]+)?", MainHandler)
         ]
-        print mappings
-        settings = dict(
+        tornado_settings = dict(
             template_path=os.path.join(os.path.dirname(__file__), "templates"),
             static_path=os.path.join(os.path.dirname(__file__), "static"),
             debug=True,
@@ -40,7 +39,7 @@ class Application(tornado.web.Application):
             ui_modules={"Post": PostModule},
             autoescape=None,
         )
-        tornado.web.Application.__init__(self, mappings, **settings)
+        tornado.web.Application.__init__(self, mappings, **tornado_settings)
 
 
 class PostModule(tornado.web.UIModule):
@@ -51,7 +50,7 @@ class PostModule(tornado.web.UIModule):
 # the main page
 class MainHandler(tornado.web.RequestHandler):
     def get(self, q):
-        if os.environ.has_key('GOOGLEANALYTICSID'):
+        if 'GOOGLEANALYTICSID' in os.environ:
             google_analytics_id = os.environ['GOOGLEANALYTICSID']
         else:
             google_analytics_id = False
