@@ -65,7 +65,7 @@ class MainHandler(tornado.web.RequestHandler):
 
 # RAMMING SPEEEEEEED!
 def main():
-	execute_from_command_line(["syncdb", "syncdb"])
+    execute_from_command_line(["syncdb", "syncdb"])
     tornado.options.parse_command_line()
     http_server = tornado.httpserver.HTTPServer(Application())
     http_server.listen(os.environ.get("PORT", 8888))
