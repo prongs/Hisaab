@@ -8,4 +8,5 @@ class Tester(Model):
 
 
 class FbUser(Model):
-
+    user_id = models.CharField(max_length=100)
+    name = models.CharField(max_length=100)
