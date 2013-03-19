@@ -11,7 +11,7 @@ ADMINS = (
 MANAGERS = ADMINS
 
 DATABASES = {}
-DATABASES['default'] = dj_database_url.config(default=os.environ.get('DATABASE_URL'))
+DATABASES['default'] = dj_database_url.config()
 #    default='sqlite:///'+os.path.expanduser('~/hisaab.db'))
 
 # Local time zone for this installation. Choices can be found here:
