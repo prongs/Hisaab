@@ -13,7 +13,7 @@ import handlers
 # import and define tornado-y things
 define("port", default=8888, help="run on the given port", type=int)
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "settings")
-
+import settings
 
 define("facebook_api_key", help="your Facebook application API key",
        default="348754415230217")
@@ -65,6 +65,7 @@ class MainHandler(tornado.web.RequestHandler):
 
 # RAMMING SPEEEEEEED!
 def main():
+	print settings.DATABASES
     execute_from_command_line(["syncdb", "syncdb"])
     tornado.options.parse_command_line()
     http_server = tornado.httpserver.HTTPServer(Application())
