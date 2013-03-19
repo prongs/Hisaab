@@ -56,7 +56,7 @@ public class ItemListActivity extends FragmentActivity implements
 	 
 	 	 
 	 ExpandableListView elv = (ExpandableListView)findViewById(R.id.listView1);
-	 elv.setAdapter(new EventListAdapter());
+	 elv.setAdapter(new EventListAdapter(this));
 	 
 	}
 
