@@ -5,7 +5,7 @@ import tornado.httpserver
 import tornado.ioloop
 import tornado.options
 import tornado.web
-
+from functools import wraps
 mappings = []
 
 
@@ -16,15 +16,25 @@ def url(url):
     return decorator
 
 
-class BaseHandler(tornado.web.RequestHandler):
+class BaseHandler(tornado.web.RequestHandler, tornado.auth.FacebookGraphMixin):
     def get_current_user(self):
         user_json = self.get_secure_cookie("fb_user")
         if not user_json:
             return None
         return tornado.escape.json_decode(user_json)
 
+    def require_logged_in(self, f):
+        @wraps(f)
+        def wrapped(*args, **kwargs):
+            if
+            r = f(*args, **kwargs)
+            return r
 
-class MainHandler(BaseHandler, tornado.auth.FacebookGraphMixin):
+    return wrapped
+
+
+@url("/main")
+class MainHandler(BaseHandler):
     @tornado.web.authenticated
     @tornado.web.asynchronous
     def get(self):
@@ -40,7 +50,7 @@ class MainHandler(BaseHandler, tornado.auth.FacebookGraphMixin):
 
 
 @url(r'/auth/login')
-class AuthLoginHandler(BaseHandler, tornado.auth.FacebookGraphMixin):
+class AuthLoginHandler(BaseHandler):
     @tornado.web.asynchronous
     def get(self):
         my_url = (self.request.protocol + "://" + self.request.host +
@@ -49,13 +59,13 @@ class AuthLoginHandler(BaseHandler, tornado.auth.FacebookGraphMixin):
         if self.get_argument("code", False):
             self.get_authenticated_user(
                 redirect_uri=my_url,
-                client_id=self.settings["facebook_api_key"],
+                client_id=self.settings["facebook_app_id"],
                 client_secret=self.settings["facebook_secret"],
                 code=self.get_argument("code"),
                 callback=self._on_auth)
             return
         self.authorize_redirect(redirect_uri=my_url,
-                                client_id=self.settings["facebook_api_key"],
+                                client_id=self.settings["facebook_app_id"],
                                 extra_params={"scope": "read_stream"})
 
     def _on_auth(self, user):
@@ -66,7 +76,7 @@ class AuthLoginHandler(BaseHandler, tornado.auth.FacebookGraphMixin):
 
 
 @url(r'/auth/logout')
-class AuthLogoutHandler(BaseHandler, tornado.auth.FacebookGraphMixin):
+class AuthLogoutHandler(BaseHandler):
     def get(self):
         self.clear_cookie("fb_user")
         self.redirect(self.get_argument("next", "/"))

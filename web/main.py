@@ -15,7 +15,7 @@ define("port", default=8888, help="run on the given port", type=int)
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "settings")
 import settings
 
-define("facebook_api_key", help="your Facebook application API key",
+define("facebook_app_id", help="your Facebook application API key",
        default=os.environ.get("FACEBOOK_APP_ID"))
 define("facebook_secret", help="your Facebook application secret",
        default=os.environ.get("FACEBOOK_SECRET"))
@@ -34,7 +34,7 @@ class Application(tornado.web.Application):
             cookie_secret="121a1a1ffbcd3434fdfadbeff3458908f890088bfc878c",
             login_url="/auth/login",
             xsrf_cookies=True,
-            facebook_api_key=options.facebook_api_key,
+            facebook_app_id=options.facebook_app_id,
             facebook_secret=options.facebook_secret,
             ui_modules={"Post": PostModule},
             autoescape=None,
@@ -67,7 +67,7 @@ def main():
     # print settings.DATABASES
     # execute_from_command_line(["syncdb", "syncdb"])
     tornado.options.parse_command_line()
-    print options.facebook_api_key, options.facebook_secret
+    print options.facebook_app_id, options.facebook_secret
     http_server = tornado.httpserver.HTTPServer(Application())
     http_server.listen(os.environ.get("PORT", 8888))
 
