@@ -16,9 +16,9 @@ os.environ.setdefault("DJANGO_SETTINGS_MODULE", "settings")
 import settings
 
 define("facebook_api_key", help="your Facebook application API key",
-       default="348754415230217")
+       default=os.environ.get("FACEBOOK_APP_ID"))
 define("facebook_secret", help="your Facebook application secret",
-       default="30f260ce8dc7fb22e4a1942773f93fa3")
+       default=os.environ.get("FACEBOOK_SECRET"))
 
 
 # application settings and handle mapping info
@@ -67,6 +67,7 @@ def main():
     # print settings.DATABASES
     # execute_from_command_line(["syncdb", "syncdb"])
     tornado.options.parse_command_line()
+    print options.facebook_api_key, options.facebook_secret
     http_server = tornado.httpserver.HTTPServer(Application())
     http_server.listen(os.environ.get("PORT", 8888))
 
