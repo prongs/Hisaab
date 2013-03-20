@@ -23,15 +23,6 @@ class BaseHandler(tornado.web.RequestHandler, tornado.auth.FacebookGraphMixin):
             return None
         return tornado.escape.json_decode(user_json)
 
-    def require_logged_in(self, f):
-        @wraps(f)
-        def wrapped(*args, **kwargs):
-            if
-            r = f(*args, **kwargs)
-            return r
-
-    return wrapped
-
 
 @url("/main")
 class MainHandler(BaseHandler):
