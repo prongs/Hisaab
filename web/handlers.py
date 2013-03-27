@@ -48,18 +48,22 @@ class AuthLoginHandler(BaseHandler):
                   "/auth/login?next=" +
                   tornado.escape.url_escape(self.get_argument("next", "/")))
         if self.get_argument("code", False):
+            print "code false"
             self.get_authenticated_user(
                 redirect_uri=my_url,
                 client_id=self.settings["facebook_app_id"],
                 client_secret=self.settings["facebook_secret"],
                 code=self.get_argument("code"),
                 callback=self._on_auth)
+            print "after get_authenticated_user"
             return
+        print "authorize_redirect"
         self.authorize_redirect(redirect_uri=my_url,
                                 client_id=self.settings["facebook_app_id"],
                                 extra_params={"scope": "read_stream"})
 
     def _on_auth(self, user):
+        print "on_auth"
         if not user:
             raise tornado.web.HTTPError(500, "Facebook auth failed")
         self.set_secure_cookie("fb_user", tornado.escape.json_encode(user))
@@ -71,6 +75,13 @@ class AuthLogoutHandler(BaseHandler):
     def get(self):
         self.clear_cookie("fb_user")
         self.redirect(self.get_argument("next", "/"))
+
+
+@url(r'/auth/user')
+class AuthUserHandler(BaseHandler):
+    @tornado.web.authenticated
+    def get(self):
+        self.write(self.get_current_user())
 
 
 class PostModule(tornado.web.UIModule):
