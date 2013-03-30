@@ -6,7 +6,7 @@ import tornado.httpserver
 import tornado.ioloop
 import tornado.options
 import tornado.web
-from functools import wraps
+from tornado.web import authenticated, asynchronous, RequestHandler, UIModule, HTTPError
 mappings = []
 
 
@@ -17,7 +17,7 @@ def url(url):
     return decorator
 
 
-class BaseHandler(tornado.web.RequestHandler, tornado.auth.FacebookGraphMixin):
+class BaseHandler(RequestHandler, tornado.auth.FacebookGraphMixin):
     def get_current_user(self):
         user_json = self.get_secure_cookie("fb_user")
         if not user_json:
@@ -27,8 +27,8 @@ class BaseHandler(tornado.web.RequestHandler, tornado.auth.FacebookGraphMixin):
 
 @url("/main")
 class MainHandler(BaseHandler):
-    @tornado.web.authenticated
-    @tornado.web.asynchronous
+    @authenticated
+    @asynchronous
     def get(self):
         self.facebook_request("/me/home", self._on_stream,
                               access_token=self.current_user["access_token"])
@@ -43,7 +43,7 @@ class MainHandler(BaseHandler):
 
 @url(r'/auth/login')
 class AuthLoginHandler(BaseHandler):
-    @tornado.web.asynchronous
+    @asynchronous
     def get(self):
         my_url = (self.request.protocol + "://" + self.request.host +
                   "/auth/login?next=" +
@@ -66,7 +66,7 @@ class AuthLoginHandler(BaseHandler):
     def _on_auth(self, user):
         print "on_auth"
         if not user:
-            raise tornado.web.HTTPError(500, "Facebook auth failed")
+            raise HTTPError(500, "Facebook auth failed")
         self.set_secure_cookie("fb_user", tornado.escape.json_encode(user))
         self.redirect(self.get_argument("next", "/"))
 
@@ -80,7 +80,7 @@ class AuthLogoutHandler(BaseHandler):
 
 @url(r'/auth/user')
 class AuthUserHandler(BaseHandler):
-    @tornado.web.authenticated
+    @authenticated
     def get(self):
         self.write(self.get_current_user())
 
@@ -93,6 +93,15 @@ class IndexHandler(BaseHandler):
         self.render('index.html', notifications=True, user=user)
 
 
-class PostModule(tornado.web.UIModule):
+@url(r'/')
+class HomeHandler(BaseHandler):
+    @authenticated
+    def get(self):
+        # user = json.loads(""" {"locale": "en_US", "session_expires": ["5183801"], "id": "100000191247312", "first_name": "Rajat", "link": "http://www.facebook.com/rajat.khandelwal.iitd", "access_token": "AAAE9MLcInQkBAF3zLcnEIIZBwUhxaAFZB9ywV89HVTsgdCRBZAHSXEndEI9kAPLx7trzXX5ah3QyIS1izBaggtMaZB0mM6VRYMHcvopaZBAZDZD", "picture": {"data": {"url": "https://fbcdn-profile-a.akamaihd.net/hprofile-ak-ash3/173107_100000191247312_1509830112_q.jpg", "is_silhouette": false}}, "last_name": "Khandelwal", "name": "Rajat Khandelwal"} """)
+        user = self.get_current_user()
+        self.render('index.html', notifications=True, user=user)
+
+
+class PostModule(UIModule):
     def render(self, post):
         return self.render_string("modules/post.html", post=post)
