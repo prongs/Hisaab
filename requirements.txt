@@ -2,3 +2,8 @@ Tornado==2.1.1
 Django==1.5
 dj-database-url==0.2.1
 psycopg2==2.4.5
+simplejson==2.2.1
+requests==0.10.4
+mongoengine==0.7.9
+motor==0.1
+tornadio2==0.0.3
