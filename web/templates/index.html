@@ -11,6 +11,11 @@
     <!-- Le styles -->
     <link href="/static/bootstrap/css/bootstrap.min.css" rel="stylesheet">
     <link href="/static/bootstrap/css/bootstrap-responsive.min.css" rel="stylesheet">
+    <link href="/static/bootstrap/css/bootstrap-wysihtml5.css" rel="stylesheet">
+    <link href="/static/dojo/1.8.3/dijit/themes/soria/soria.css" rel="stylesheet">
+    <link href="/static/dojo/1.8.3/dijit/themes/tundra/tundra.css" rel="stylesheet">
+    <link href="/static/dojo/1.8.3/dijit/themes/claro/claro.css" rel="stylesheet">
+    <link href="/static/dojo/1.8.3/dojox/editor/plugins/resources/css/Save.css" rel="stylesheet">
 
     <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
     <!--[if lt IE 9]>
@@ -37,12 +42,16 @@
         display: inline-block !important;
         padding-left: 1px !important;
       }
+      .friend_row{
+        cursor:pointer;
+      }
     </style>
+
   </head>
 
-  <body>
+  <body class="claro">
 
-    <div class="navbar navbar-inverse navbar-fixed-top">
+    <div id="top_navbar" class="navbar navbar-inverse navbar-fixed-top">
       <div class="navbar-inner">
         <div class="container">
           <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
@@ -94,50 +103,92 @@
       </div>
     </div>
 
-    <div class="container">
-
-      <!-- Main hero unit for a primary marketing message or call to action -->
-      <div class="hero-unit">
-        <h1>Hello, world!</h1>
-        <p>This is a template for a simple marketing or informational website. It includes a large callout called the hero unit and three supporting pieces of content. Use it as a starting point to create something more unique.</p>
-        <h2>User Json from facebook login is given below:</h2>
-        <pre class="well">{{json.dumps(user, indent=4)}}</pre>
-        <h3>Also, try to resize the browser</h3>
-        <p><a href="#" class="btn btn-primary btn-large">Learn more &raquo;</a></p>
-      </div>
-
-      <!-- Example row of columns -->
-      <div class="row">
-        <div class="span4">
-          <h2>Heading</h2>
-          <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>
-          <p><a class="btn" href="#">View details &raquo;</a></p>
-        </div>
-        <div class="span4">
-          <h2>Heading</h2>
-          <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>
-          <p><a class="btn" href="#">View details &raquo;</a></p>
-       </div>
-        <div class="span4">
-          <h2>Heading</h2>
-          <p>Donec sed odio dui. Cras justo odio, dapibus ac facilisis in, egestas eget quam. Vestibulum id ligula porta felis euismod semper. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus.</p>
-          <p><a class="btn" href="#">View details &raquo;</a></p>
-        </div>
-      </div>
-
-      <hr>
-
-      <footer>
-        <p>&copy; Company 2013</p>
-      </footer>
-
-    </div> <!-- /container -->
-
+    <div id="mainWidget_div" data-dojo-type="hisaab.MainViewWidget"></div>
     <!-- Le javascript
     ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->
-    <script src="/static/js/jquery-1.9.1.min.js"></script>
-    <script src="/static/bootstrap/js/bootstrap.min.js"></script>
+    <div id="fb-root"></div>
+    <script type="text/javascript">
+      var dojoConfig=(function(){
+          return {
+              async:true,
+              isDebug:true,
+              parseOnLoad:true,
+              packages:[
+              {
+                name:"hisaab",
+                location: location.origin+"/static/dojo/Hisaab"
+              },
+              {
+                name: "bootstrap",
+                location: location.origin+"/static/dojo/Dojo-Bootstrap"
+              }],
+          };
 
+      })();
+    </script>
+    <script type="text/javascript" src="/static/dojo/1.8.3/dojo/dojo.js"></script>
+    <script type="text/javascript">
+      require([
+          "dijit/dijit",
+          "dojo/parser",
+          "dojo/ready",
+          "hisaab/MainViewWidget",
+        ]);
+    </script>
+    <script src="/static/js/jquery-1.9.1.min.js"></script>
+    <script src="/static/js/wysihtml5-0.3.0.min.js"></script>
+    <script src="/static/bootstrap/js/bootstrap.min.js"></script>
+    <script src="/static/bootstrap/js/bootstrap-wysihtml5.js"></script>
+    <script type="text/javascript">
+      // You probably don't want to use globals, but this is just example code
+      var fbAppId = "{{facebook_app_id}}";
+
+      // This is boilerplate code that is used to initialize the Facebook
+      // JS SDK.  You would normally set your App ID in this code.
+
+      // Additional JS functions here
+      window.fbAsyncInit = function() {
+        FB.init({
+          appId      : fbAppId,        // App ID
+          status     : true,           // check login status
+          cookie     : true,           // enable cookies to allow the server to access the session
+          xfbml      : true            // parse page for xfbml or html5 social plugins like login button below
+        });
+        // Put additional init code here
+        require(["dojo/ready", "dojo/dom", "dojo/_base/fx", "dojo/on", "dijit/registry"], function(ready, dom, base_fx, on, registry){
+          FB.login(function(response) {
+            if (response.authResponse)
+            {
+              console.log('Welcome!  Fetching your information.... ');
+              FB.api('/me/friends', function(response) {
+                if(response.data)
+                {
+                  friends_data=response;
+                  registry.byId("mainWidget_div").set_friends_data(friends_data);
+                }
+                else
+                {
+                  console.log("Response.data does not exist");
+                }
+              });
+            }
+            else
+            {
+              console.log('User cancelled login or did not fully authorize.');
+            }
+          });
+        });
+      };
+      // Load the SDK Asynchronously
+      (function(d, s, id){
+         var js, fjs = d.getElementsByTagName(s)[0];
+         if (d.getElementById(id)) {return;}
+         js = d.createElement(s); js.id = id;
+         js.src = "//connect.facebook.net/en_US/all.js";
+         fjs.parentNode.insertBefore(js, fjs);
+       }(document, 'script', 'facebook-jssdk'));
+
+    </script>
   </body>
 </html>
